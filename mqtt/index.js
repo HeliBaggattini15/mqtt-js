@@ -1,5 +1,6 @@
 const mqtt = require('mqtt')
 const client = mqtt.connect('mqtt://test.mosquitto.org')
+const helper = require('controller/dbUtilities')
 
 var state = ''
 var connected = false
@@ -25,6 +26,7 @@ client.on('message', (topic, message) => {
 function handleConnected(message) {
     console.log('%s conected', message)
     connected = (message.toString() === 'true')
+    helper.default().insertData();
 }
 
 function handlePwrState(message) {
