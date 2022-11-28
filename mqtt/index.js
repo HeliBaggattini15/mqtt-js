@@ -75,9 +75,9 @@ async function handleCode(message) {
     console.log('code received %s', message);
     const userCode = await findUserByCode(message.toString());
     if (userCode.length === 0) {
-        client.publish('proj/atomic/dev/heli/return', `unable to find user`);
+        client.publish('proj/atomic/dev/heli/err', `user not found`);
     } else {
-        client.publish('proj/atomic/dev/heli/return', `check registered for user ${userCode[0].username}`);
+        client.publish('proj/atomic/dev/heli/return', `checked user ${userCode[0].username}`);
     }
 }
 
@@ -85,8 +85,8 @@ async function handleRFID(message) {
     console.log('rfid received %s', message);
     let userRfid = await findUserByRFID(message.toString());
     if (userRfid.length === 0) {
-        client.publish('proj/atomic/dev/heli/return', `unable to find user`);
+        client.publish('proj/atomic/dev/heli/err', `user not found`);
     } else {
-        client.publish('proj/atomic/dev/heli/return', `check registered for user ${userRfid[0].username}`);
+        client.publish('proj/atomic/dev/heli/return', `checked user ${userRfid[0].username}`);
     }
 }
