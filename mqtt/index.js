@@ -77,7 +77,7 @@ async function handleCode(message) {
     if (userCode.length === 0) {
         client.publish('proj/atomic/dev/heli/err', `user not found`);
     } else {
-        client.publish('proj/atomic/dev/heli/return', `checked user ${userCode[0].username}`);
+        client.publish('proj/atomic/dev/heli/return', `${userCode[0].username}`);
     }
 }
 
@@ -87,6 +87,6 @@ async function handleRFID(message) {
     if (userRfid.length === 0) {
         client.publish('proj/atomic/dev/heli/err', `user not found`);
     } else {
-        client.publish('proj/atomic/dev/heli/return', `checked user ${userRfid[0].username}`);
+        client.publish('proj/atomic/dev/heli/return', `${userRfid[0].username}`);
     }
 }
