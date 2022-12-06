@@ -2,6 +2,8 @@ const mqtt = require('mqtt');
 const { Op } = require("sequelize");
 const sequelize = require('../mqtt/database/db');
 const users = require('../mqtt/models/users');
+const register = require('../mqtt/models/registers');
+const Sequelize = require("sequelize");
 
 const client = mqtt.connect('mqtt://test.mosquitto.org');
 
@@ -46,6 +48,21 @@ const findUserByRFID = async (rfid) => {
     }
 }
 
+const insertCheck = async (id, type) => {
+    try {
+        return await register.create(
+            {
+                user_id: id,
+                // register_time: new Date().toLocaleString(),
+                register_time: new Date().toLocaleString("pt-BR"),
+                type: type,
+            }
+        )
+    } catch (error) {
+        console.error('Unable to insert:', error);
+    }
+}
+
 
 connect()
 
@@ -77,6 +94,7 @@ async function handleCode(message) {
     if (userCode.length === 0) {
         client.publish('proj/atomic/dev/heli/err', `user not found`);
     } else {
+        console.log('%s', userCode[0].username);
         client.publish('proj/atomic/dev/heli/return', `${userCode[0].username}`);
     }
 }
@@ -87,6 +105,12 @@ async function handleRFID(message) {
     if (userRfid.length === 0) {
         client.publish('proj/atomic/dev/heli/err', `user not found`);
     } else {
-        client.publish('proj/atomic/dev/heli/return', `${userRfid[0].username}`);
+        try {
+            // await insertCheck(userRfid[0].id, "rfid");
+            console.log(new Date().toLocaleString("pt-BR"));
+            client.publish('proj/atomic/dev/heli/return', `${userRfid[0].username}`);
+        } catch (error) {
+            client.publish('proj/atomic/dev/heli/err', `error on reg`);
+        }
     }
 }
