@@ -94,8 +94,12 @@ async function handleCode(message) {
     if (userCode.length === 0) {
         client.publish('proj/atomic/dev/heli/err', `user not found`);
     } else {
-        await insertCheck(userCode[0].id, "code");
-        client.publish('proj/atomic/dev/heli/return', `${userCode[0].username}`);
+        try {
+            await insertCheck(userCode[0].id, "code");
+            client.publish('proj/atomic/dev/heli/return', `${userCode[0].username}`);
+        } catch (error) {
+            client.publish('proj/atomic/dev/heli/err', `error on reg`);
+        }
     }
 }
 
